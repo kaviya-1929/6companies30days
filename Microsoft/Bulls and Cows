@@ -1,0 +1,28 @@
+class Solution {
+    public String getHint(String A, String B) {
+        int arr1[]=new int[10];
+        int x=0,y=0;
+        for(int i=0;i<A.length();i++)
+        {
+            if(A.charAt(i)==B.charAt(i))
+            {
+                x++;
+            }
+            else
+            {
+            arr1[A.charAt(i)-48]++;
+            }
+        }
+        for(int i=0;i<B.length();i++)
+        {
+            if(arr1[B.charAt(i)-48]>0 && A.charAt(i)!=B.charAt(i))
+            {
+                y++;
+                arr1[B.charAt(i)-48]--;
+            }
+            
+        }
+        String str=""+x+"A"+y+"B";
+        return str;
+    }
+}
