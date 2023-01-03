@@ -1,0 +1,36 @@
+class Solution {
+    public int evalRPN(String[] tokens) {
+        String arr[]={"+","-","*","/"};
+        HashSet<String> set = new HashSet<>(Arrays.asList(arr));
+        Stack<Integer> stk = new Stack<>();  
+        for(int i=0;i<tokens.length;i++)
+        {
+            if(set.contains(tokens[i]))
+            {
+                int a=stk.pop();
+                int b=stk.pop();
+                 switch (tokens[i])
+                  {
+                  case "+" :
+                         stk.push(b+a);
+                         break;
+                    case "-" :
+                         stk.push(b-a);
+                         break;
+                     case "*" :
+                         stk.push(b*a);
+                         break;
+                     case "/" :
+                         stk.push(b/a);
+                         break;
+                
+                   }
+            }
+            else
+            {
+                stk.push(Integer.parseInt(tokens[i]));
+            }
+        }
+        return stk.pop();
+    }
+}
