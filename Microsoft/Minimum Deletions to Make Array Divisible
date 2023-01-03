@@ -1,0 +1,32 @@
+class Solution {
+    public int minOperations(int[] nums, int[] numsDivide) {
+        int result = numsDivide[0];
+        int n= numsDivide.length;
+    for (int i = 1; i < n; i++) 
+    {
+        result = gcd(numsDivide[i], result); 
+    }
+    Arrays.sort(nums);
+    int count=0;
+    for(int i=0;i<nums.length;i++)
+    {
+        if(result%nums[i]!=0)
+        {
+            count++;
+        }
+        else
+        {
+            return count;
+        }
+    }
+    return -1;
+  
+}
+
+static int gcd(int a, int b) 
+{ 
+    if (a == 0) 
+        return b; 
+    return gcd(b % a, a); 
+} 
+}
