@@ -1,0 +1,17 @@
+
+class Solution {
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        ArrayList<Integer> list=new ArrayList<>();
+        inorderRec(root1,list); 
+        inorderRec(root2,list);
+        Collections.sort(list);
+        return list;
+    }
+    static void inorderRec(TreeNode root,List<Integer> list){
+        if(root!=null){
+            inorderRec(root.left,list);
+            list.add(root.val);
+            inorderRec(root.right,list);
+        }
+    }
+}
