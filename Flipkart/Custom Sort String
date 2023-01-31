@@ -1,0 +1,23 @@
+class Solution {
+    public String customSortString(String order, String s) {
+        String str="";
+        int l=0;
+        int len=order.length();
+        char[] ch=s.toCharArray();
+        while(l<len){
+            for(int i=0;i<s.length();i++){
+                if(order.charAt(l)==s.charAt(i)){
+                    str+=order.charAt(l);
+                    ch[i]='0';
+                }
+            }
+            l++;
+        }
+        for(int i=0;i<ch.length;i++){
+            if(ch[i]!='0'){
+                str+=ch[i];
+            }
+        }
+        return str;
+    }
+}
