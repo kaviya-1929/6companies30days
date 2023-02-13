@@ -1,0 +1,29 @@
+class Solution {
+    public int maximumGood(int[][] sts) {
+        int n = sts.length;
+        int res = 0;
+        
+        for (int i = (int) Math.pow(2, n); i < (int) Math.pow(2, n + 1); i++) {
+            String b= Integer.toBinaryString(i).substring(1);
+            boolean c = false;
+            for (int j = 0; !c&&j < n; j++) {
+                if (b.charAt(j) == '1') { 
+                    for(int k = 0; !c&&k< sts[j].length; k++) {
+                        if (sts[j][k]!=2 && sts[j][k] != b.charAt(k)-'0') {
+                          
+                            c=true;
+                        }
+                    }
+                }
+            }
+            if(!c) {
+                int temp = 0;
+                for(int x = 0; x< b.length(); x++){
+                    temp+=b.charAt(x)-'0';
+                }
+                res = Math.max(temp, res);
+            }
+        }
+        return res;
+    }
+}
