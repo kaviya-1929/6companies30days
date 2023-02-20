@@ -1,97 +1,34 @@
 class Solution {
-    int[][] lcp;
-    long[][] dp;
-    long[][] dps;
-    long mod=1000000007;
-    String num;
-    int n;
-    //Pre compute Longest Common Prefix sequence for each index in the string
-    void calcLCP()
-    {
-        for(int i=n-1; i>=0; i--)
-        {
-            for(int j=n-1; j>=0; j--)
-            {
-                if(num.charAt(i)==num.charAt(j))
-                {
-                    lcp[i][j]=lcp[i+1][j+1]+1;   
-                }
-            }
-        }
-    }
-    
-    //compare substring of same length for value
-    boolean compare(int i, int j, int len)
-    {
-        int common=lcp[i][j];
-        if(common>=len)
-        {
-            return true;
-        }
-        if(num.charAt(i+common)<num.charAt(j+common))
-        {
-            return true;
-        }
-        return false;
-    }
-    
-    //calculates number of possible separations
-    void calcResult()
-    {
-        for(int i=n-1; i>=0; i--)
-        {
-            //leading zero at current current index
-            if(num.charAt(i)=='0')
-            {
-                continue;
-            }
-            
-            //for substring starting at index i
-            long sum=0;
-            for(int j=n-1; j>=i; j--)
-            {
-                if(j==n-1)
-                {
-                    //whole substring from index i is a valid possible list of interger(single integer in this case)
-                    dp[i][j]=1;
-                }
-                else
-                {
-                    int len=j-i+1;//first integer (i-j)
-                    int st=j+1;//second integer start index
-                    int ed=st+len-1;//second integer end index
-                    //equal length integers should be compared for value
-                    dp[i][j]=0;
-                    if(ed<n && compare(i, st, len))
-                    {
-                        dp[i][j]=dp[st][ed];
-                    }
-                    //including the second integers possibilities with length greater than 1st one.
-                    if(ed+1<n)
-                    {
-                        dp[i][j]=(dp[i][j]+dps[st][ed+1])%mod;
-                        //dps[st][ed+1] => dp[st][ed+1].......dp[st][n-1]
-                    }
-                }
-                dps[i][j]=sum=(sum+dp[i][j])%mod;
-            }
-        }
-    }
+    static int mod = (int) 1e9 + 7;
     public int numberOfCombinations(String num) {
-        if(num.charAt(0)=='0')
-        {
-            return 0;
+        char[] cs = num.toCharArray();
+        int n = cs.length;
+        int[][] rank = new int[n][n + 1];
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>(1, (a, b) -> a[1] - b[1]);
+        for (int i = 1; i <= n; ++i) {
+            int c = 0, prev = 0;
+            for (int j = 0; j + i <= n; ++j) pq.add(new int[]{j, rank[j][i - 1] * 10 + cs[i + j - 1] - '0'});
+            while (!pq.isEmpty()) {
+                int[] cur = pq.poll();
+                if (cur[1] != prev) c++;
+                rank[cur[0]][i] = c;
+                prev = cur[1];
+            }
         }
-        n=num.length();
-        this.num=num;
-        lcp=new int[n+1][n+1];
-        dp=new long[n+1][n+1];
-        dps=new long[n+1][n+1];
-        
-        calcLCP();
-        
-        calcResult();
-        
-        return (int)dps[0][0];
+        int[][] dp = new int[n][n + 1];
+        for (int j = n - 1; 0 <= j; --j) {
+            if ('0' == cs[j]) continue;
+            int len = n - j;
+            dp[j][len] = 1;
+            for (int i = len - 1; 1 <= i; --i) {
+                dp[j][i] = dp[j][i + 1];
+                int next = i + j;                
+                if (next >= n || next + i > n) continue;
+                if (rank[j][i] <= rank[next][i]) dp[j][i] = (dp[j][i] + dp[next][i]) % mod;
+                else if (next + i < n) dp[j][i] = (dp[j][i] + dp[next][i + 1]) % mod;
+            }
+            dp[j][0] = dp[j][1];
+        }
+        return dp[0][0];
     }
 }
